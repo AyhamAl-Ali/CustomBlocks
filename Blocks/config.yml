@@ -1,0 +1,458 @@
+#! IMPORTANT NOITES:
+#! in rewards section you will see a reward option, this option is very useful, you can use a few options inside it.. Check the tutorial below:
+#!  - Keywords (can only be used at the beginning of the value): [cmd], [code]
+#!  - Split actions using (used to split actions to allow multiple actions): [;]
+#!  - Notes:
+#!    - [cmd]: used to execute a command
+#!    - [code]: used to execute a skript code line (use with careful)
+#!    - [msg]: used to send a private message
+#!    - When using "" inside another "" you need to double them like "[code] give %player% stone named ""&aStone"""
+#!  - Examples:
+#!    - "[cmd] eco give %player% 100"
+#!    - "[code] give %player% diamond sword"
+#!    - "[code] give %player% diamond sword of sharpness 10"
+#!    - "[code] give %player% diamond sword of sharpness 10 named ""&aSword"""
+#!    - "[code] give %player% diamond sword of sharpness 10 named ""&aSword"" with lore ""&bLore"""
+#! 
+#! 
+
+messages:
+  prefix: "&a&lBlocks &7»"
+  broadcast: "&a>&b>&c>"
+  no-permissions: "%prefix% &cYou don't have permissions to do that."
+  blocks-count: "%prefix% &f%player%&a's blocks: &f%blocks%"
+  temp-blocks-count: "%prefix% &f%player%&a's temp blocks: &f%tempblocks%"
+  reload: "%prefix% &aConfiguration files reloaded."
+  help:
+    - " "
+    - "             &e&lBlocks Counter &8- &e&lHelp"
+    - "%prefix% &a/Blocks rewards(r) &8- &7Add/Remove/Set to/from/ blocks of player."
+    - "%prefix% &a/Blocks [player] &8- &7Get blocks counter of a player."
+    - " "
+  admin-help:
+    - "%prefix% &e/Blocks reload &8- &7Reload configuration files."
+    - "%prefix% &e/Blocks add/remove/set <player> <integer> &8- &7Add/Remove/Set to/from blocks of player."
+    - " "
+  rewards:
+    - "%prefix% &aList of all blocks rewards.."
+    - " "
+    - "&cNOTE: &aEvery &f10,000 &ablocks you break you might get a random reward such as &fMoney&7,&f Tokens&7,&f Keys and Enchantments&a."
+    - " "
+    - "  &7• &f100 &ablocks &f= &a$&f250&7&a."
+    - "  &7• &f1,000 &ablocks &f= &a$&f1,500&7,&f 5&a tokens&a."
+    - "  &7• &f10,000 &ablocks &f= &a$&f5,000&7,&f 10&a tokens&a."
+    - "  &7• &f50,000 &ablocks &f= &a$&f10,000&7,&f 15&a tokens&a."
+    - "  &7• &f100,000 &ablocks &f= &a$&f15,000&7,&f 20&a tokens&a."
+    - "  &7• &f200,000 &ablocks &f= &a$&f20,000&7,&f 20&a tokens&a."
+    - "  &7• &f300,000 &ablocks &f= &a$&f25,000&7,&f 20&a tokens&a."
+    - "  &7• &f400,000 &ablocks &f= &a$&f30,000&7,&f 25&a tokens&a."
+    - "  &7• &f500,000 &ablocks &f= &a$&f35,000&7,&f 25&a tokens&7, &f1 &aVip key."
+    - "  &7• &f600,000 &ablocks &f= &a$&f40,000&7,&f 25&a tokens&a."
+    - "  &7• &f700,000 &ablocks &f= &a$&f45,000&7,&f 30&a tokens&a."
+    - "  &7• &f800,000 &ablocks &f= &a$&f50,000&7,&f 30&a tokens&a."
+    - "  &7• &f900,000 &ablocks &f= &a$&f55,000&7,&f 30&a tokens&a."
+    - "  &7• &f1,000,000 &ablocks &f= &a$&f75,000&7,&f 35&a tokens&7,&f 1&6 Pro key&a."
+    - "  &7• &f5,000,000 &ablocks &f= &a$&f100,000&7,&f 35&a tokens&7,&f 2&6 Pro keys&a."
+    - "  &7• &f1,000,0000 &ablocks &f= &a$&f120,000&7,&f 35&a tokens&7,&f 3&6 Pro keys&a."
+    - "  &7• &f2,000,0000 &ablocks &f= &a$&f140,000&7,&f 40&a tokens&7,&f 1&c Rare key&a."
+    - "  &7• &f3,000,0000 &ablocks &f= &a$&f160,000&7,&f 40&a tokens&7,&f 2&c Rare keys&a."
+    - "  &7• &f4,000,0000 &ablocks &f= &a$&f180,000&7,&f 40&a tokens&7,&f 3&c Rare keys&a."
+    - "  &7• &f5,000,0000 &ablocks &f= &a$&f200,000&7,&f 45&a tokens&7,&f 2&a Legendary keys."
+    - " "
+  temp-blocks-admin-help:
+    - " "
+    - "             &e&lBlocks Counter &8- &e&lHelp"
+    - "%prefix% &e/TBlocks add/remove/set <player> <number> &8- &7Add/Remove/Set to/from/ temp blocks of player."
+    - "%prefix% &e/TBlocks [player] &8- &7Get temp blocks counter of a player."
+    - " "
+
+  top-header: "%nl%&7» &aBlocks Top %nl% "
+  top: "  &a%pos%. &f%player%: &a%value%"
+  top-footer: " "
+
+settings:
+  # Stop counting blocks if player have no enough space in their inventory (default: true)
+  stop-counting-if-no-enough-space: true
+  stop-counting-if-not-in-mine-regions: true
+  title-duration: "3" # in seconds
+
+  top-number: 10 # Top 10
+
+temp-rewards:
+  # Toggle temp rewards
+  toggle: true
+  # Every how many blocks should temp blocks functions work (default: every 10000 blocks)
+  temp-blocks-count: "10000"
+  # How many rewards should the player get if they pass the chances for each reward (just like looping X times and for each time it will check for chances if it passes it will be given) (setting i to 0 with disable temp-rewards, if u want to disable it set it to false)
+  temp-blocks-rewards-count: "1"
+  # If none of the main rewards passes the chance then this no-chance-reward will be given instead
+  no-chance-reward-toggle: "true"
+  no-chance-reward:
+    title: "&a&lCongratulations" 
+    subtitle: "&aYou received &f&l$500 &7&o(/Blocks rewards)"
+    broadcast: "%broadcast% &f%player% &areceived &f&l$500 &7&o(/Blocks rewards)"
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 500"
+
+  rewards:
+    '1':
+      chance: "48"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f$1000 &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f$1000 &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /eco give %player% 1000"
+      
+    '2':
+      chance: "40"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f10 tokens &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f10 tokens &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /te give %player% 10"
+
+    '3':
+      chance: "35"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f15 tokens &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f15 tokens &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /te give %player% 15"
+
+    '4':
+      chance: "30"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f20 tokens &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f20 tokens &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /te give %player% 20"
+
+    '5':
+      chance: "10"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f1 Vip key &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f1 Vip key &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /crate give physical vip 1 %player%"
+
+    '6':
+      chance: "8"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f1 Pro key &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f1 Pro key &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /crate give physical pro 1 %player%"
+
+    '7':
+      chance: "9"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f2 Vip key &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f1 Vip key &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /crate give physical vip 2 %player%"
+
+    '8':
+      chance: "5"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f+1 Unbreaking &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f+1 Unbreaking &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] addenchant %player% unbreaking 1"
+
+    '9':
+      chance: "4"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f+1 Efficiency &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f+1 Efficiency &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] addenchant %player% efficiency 1"
+
+    '10':
+      chance: "2"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f+1 Fortune &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f+1 Fortune &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] addenchant %player% fortune 1"
+
+    '11':
+      chance: "45"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f10 XP &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f10 XP &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /exp 10 %player%"
+
+    '12':
+      chance: "40"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f20 XP &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f20 XP &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /exp 20 %player%"
+
+    '13':
+      chance: "35"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f30 XP &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f30 XP &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /exp 30 %player%"
+
+    '14':
+      chance: "10"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f60 XP &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f60 XP &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /exp 60 %player%"
+
+    '15':
+      chance: "45"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f$1500 &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f$1500 &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /eco give %player% 1500"
+
+    '16':
+      chance: "40"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f$2000 &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f$2000 &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /eco give %player% 2000"
+
+    '17':
+      chance: "10"
+      title: "&a&lCongratulations" 
+      subtitle: "&aYou received &f$4000 &7&o(/Blocks rewards)"
+      broadcast: "%broadcast% &f%player% &areceived &f$4000 &7&o(/Blocks rewards)"
+      message: ""
+      rewards:
+        - "[cmd] /eco give %player% 4000"
+
+
+rewards:
+  '100': #! Blocks Target
+    title: "&f&l%blocks% &a&lBlocks" #! Title
+    subtitle: "&aYou received &f$250&a." #! Subtitle
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f&l$250&a." #! Broadcast
+    message: "" #! Private Message
+    rewards: #! Rewards ([cmd], [code], [msg])
+      - "[cmd] /eco give %player% 250"
+
+  '1000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$1,500&7,&f 5 tokens&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$1,500&7,&f 5 tokens&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 1500"
+      - "[cmd] /te give %player% 5"
+    
+
+  '10000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$5,000&7,&f 10 tokens&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$5,000&7,&f 10 tokens&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 5000"
+      - "[cmd] /te give %player% 10"
+    
+
+  '50000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$10,000&7,&f 15 tokens&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$10,000&7,&f 15 tokens&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 10000"
+      - "[cmd] /te give %player% 15"
+    
+
+  '100000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$15,000&7,&f 20 tokens&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$15,000&7,&f 20 tokens&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 15000"
+      - "[cmd] /te give %player% 20"
+    
+
+  '200000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$20,000&7,&f 20 tokens&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$20,000&7,&f 20 tokens&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 20000"
+      - "[cmd] /te give %player% 20"
+      - "[cmd] "
+    
+
+  '300000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$25,000&7,&f 20 tokens&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$25,000&7,&f 20 tokens&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 25000"
+      - "[cmd] /te give %player% 20"
+    
+
+  '400000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$30,000&7,&f 25 tokens&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$30,000&7,&f 25 tokens&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 30000"
+      - "[cmd] /te give %player% 25"
+    
+
+  '500000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$35,000&7,&f 25 tokens&7,&f 1 Vip key&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$35,000&7,&f 25 tokens&7,&f 1 Vip key&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 35000"
+      - "[cmd] /te give %player% 25"
+      - "[cmd] /crate give physical vip 1 %player%"
+    
+
+  '600000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$40,000&7,&f 25 tokens&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$40,000&7,&f 25 tokens&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 40000"
+      - "[cmd] /te give %player% 25"
+
+
+  '700000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$45,000&7,&f 30 tokens&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$45,000&7,&f 30 tokens&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 45000"
+      - "[cmd] /te give %player% 30"
+
+
+  '800000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$50,000&7,&f 30 tokens&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$50,000&7,&f 30 tokens&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 50000"
+      - "[cmd] /te give %player% 30"
+
+
+  '900000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$55,000&7,&f 30 tokens&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$55,000&7,&f 30 tokens&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 55000"
+      - "[cmd] /te give %player% 30"
+
+
+  '1000000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$75,000&7,&f 35 tokens&7,&f 1 Pro key&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$75,000&7,&f 35 tokens&7,&f 1 Pro key&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 75000"
+      - "[cmd] /te give %player% 35"
+      - "[cmd] /crate give physical pro 1 %player%"
+
+
+  '5000000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$100,000&7,&f 35 tokens&7,&f 2 Pro keys&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$100,000&7,&f 35 tokens&7,&f 2 Pro keys&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 100000"
+      - "[cmd] /te give %player% 35"
+      - "[cmd] /crate give physical pro 2 %player%"
+
+
+  '10000000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$120,000&7,&f 35 tokens&7,&f 3 Pro keys&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$120,000&7,&f 35 tokens&7,&f 3 Pro keys&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 120000"
+      - "[cmd] /te give %player% 35"
+      - "[cmd] /crate give physical pro 3 %player%"
+
+
+  '20000000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$140,000&7,&f 40 tokens&7,&f 1 Rare key&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$140,000&7,&f 40 tokens&7,&f 1 Rare key&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 140000"
+      - "[cmd] /te give %player% 40"
+      - "[cmd] /crate give physical rare 1 %player%"
+
+  '30000000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$160000&7,&f 40 tokens&7,&f 2 Rare keys&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$160,000&7,&f 40 tokens&7,&f 2 Rare keys&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 160000"
+      - "[cmd] /te give %player% 40"
+      - "[cmd] /crate give physical rare 2 %player%"
+
+
+  '40000000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$180000&7,&f 40 tokens&7,&f 3 Rare keys&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$180,000&7,&f 40 tokens&7,&f 3 Rare keys&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 180000"
+      - "[cmd] /te give %player% 40"
+      - "[cmd] /crate give physical rare 3 %player%"
+
+
+  '50000000':
+    title: "&f&l%blocks% &a&lBlocks"
+    subtitle: "&aYou received &f$200000&7,&f 45 tokens&7,&f 2 Legendary keys&a."
+    broadcast: "%broadcast% &f%player% &areached &f%blocks% &ablocks and received &f$200,000&7,&f 45 tokens&7,&f 2 Legendary keys&a."
+    message: ""
+    rewards:
+      - "[cmd] /eco give %player% 200000"
+      - "[cmd] /te give %player% 45"
+      - "[cmd] /crate give physical legendary 2 %player%"
+
